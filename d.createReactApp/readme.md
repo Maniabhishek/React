@@ -36,3 +36,7 @@
 * we can add browserlist (visit browserlist ) which our app can suppport , we can decide based on the application browserlist website can give you the proper picture 
 
 * for creating the production build we can use `npx parcel build index.html`
+
+* we can add these `npx parcel index.html` or `npx parcel build index.html` to the package.json scripts and once we add we can directly start using npm run start based what have we configured
+
+* in our case we added script `npx parcel index.html` to start so we can simply use npm start , and for build we added `npx parcel build index.html` , so just use npm run build
