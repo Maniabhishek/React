@@ -38,3 +38,15 @@ const element = <h1>this is heading</h1>
 > - how react work behind the scenes
 >> react uses reaconsilation alg. also known as react fiber , for example we have a component and inside that component , it renders muliple Card component then after filteration state updates and only few card are rendered back , how does this happen , hence react creates , so react creates virtual dom for all the cards and the moment state updates , react will check the differences before and after then if there is any changes react will update the UI virtual dom is nothing but react.createElement which is an object similary the component you create (or in simple work html you write is virtual dom) Diff algorigthm will find the differences between the compoenent before and after , after state change, 
 > - why is react fast , because it does efficient dom manipulation , react can find differeneces between before and after component , it has diff alg. , it find out the diff and update the UI 
+
+### UseEffect
+> - useEffect without any dependency array it will load everytime the component is rendered , if dependency array is present (and it doesn't have any value inside it) useEffect will be called only on the initial render and if there is dependency state variable included then it will be called every time when dependent state changes
+
+### normal variable vs state variable
+> - one may ask why not we use normal variable instead of useState , but when you use you will find out that component will not be updated or rendered when variable data changes , because react will not know whether the variable is changed or not , and in case of useState the moment you use it , react will know whenever the state changes 
+
+### Routing
+> - for routing we are using react router dom , this will give us createBrowserRouter, RouterProvider , Outlet (for children rendering) , as you can in side the project how we are handling the routing 
+
+### for creating the dynamic routing 
+> - for dynamic routing we can simply use path with :id , and this will take us to dynamic page and then we can handle accordingly

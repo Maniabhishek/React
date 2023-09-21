@@ -1,16 +1,47 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
-import {card} from "../data"
 import Header from "./components/Header"
 import Body from "./components/Body"
+import {createBrowserRouter, RouterProvider, Outlet} from 'react-router-dom'
+import About from "./components/About"
+import Error from "./components/Error"
+import Contact from "./components/Contact"
+import ResMenu from "./components/ResMenu"
 
 const App = () => {
     return <div>
         <Header/>
-        <Body />
+        <Outlet/>
     </div>
 }
 
+const routerBrowser = createBrowserRouter([
+    {
+        path: "/",
+        element: <App />,
+        children: [
+            {
+                path: '/',
+                element: <Body/>
+            }
+            ,
+            {
+            path: "/about",
+            element: <About />,
+            },
+            {
+                path: "/contact",
+                element: <Contact />,
+            },
+            {
+                path: "/restaurant/:resId",
+                element: <ResMenu/>
+            }
+        ],
+        errorElement: <Error/>,
+    }
+])
+
 const root = ReactDOM.createRoot(document.getElementById("root"))
 
-root.render(<App />)
+root.render(<RouterProvider router={routerBrowser} />)
