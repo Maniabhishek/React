@@ -1,13 +1,17 @@
-import React, {useState, useEffect} from "react"
-import ResCard from "./resCard"
+import React, {useState, useEffect, useContext} from "react"
+import ResCard, { PromotedResCard } from "./resCard"
 import {card} from "../../data"
 import Shimmer from "./shimmer"
 import {Link} from "react-router-dom"
+import useOnlineStatus from "../utils.js/useOnlineStatus"
+import UserContext from "../utils.js/userContext"
 
 const Body = ()=> {
     const [cardData, setCardData] = useState([])
     const [filteredData, setFilteredData] = useState([])
     const [searchTxt, setSearchTxt] = useState('')
+    const isOnline = useOnlineStatus()
+    const {setUserName, userName, loggedInUser, dummy} = useContext(UserContext)
     const filterData = () => {
         let updatedcard = cardData.filter(c=> {
             const rating = Number(c.rating.split(" ")[0])
@@ -18,6 +22,9 @@ const Body = ()=> {
         setFilteredData(updatedcard)
     }
     
+
+    const PromotedRestCard = PromotedResCard(ResCard)
+
     useEffect(()=>{
         fetchData()
     },[])
@@ -29,7 +36,7 @@ const Body = ()=> {
                 const data  = await res.json()
                 setCardData(card)
                 setFilteredData(card)
-            },2000)
+            },1000)
             return ()=> clearTimeout(timer)
         } catch (error) {
             
@@ -37,29 +44,40 @@ const Body = ()=> {
     }
 
     if(cardData.length === 0) {
+        console.log("shimmer is returned ");
         return <Shimmer />
     }
-
+    
+    if(!isOnline) return <h1>You seem to be offline. Please check your connection!!! </h1>
     return (
         <div className="body">
-            <div className = "filter-container">
-                <button className="filter" onClick={filterData}>
+            <div className = "flex">
+                <button className="p-1 bg-blue-100 border border-black rounded-md m-2" onClick={filterData}>
                     Top Rated Restaurants
                 </button>
-                <div className='search'>
-                    <input type='text' id='search' value={searchTxt} onChange={(e)=>{
+                <div className='flex items-center'>
+                    <input className="p-1 border border-black rounded-md m-2" type='text' id='search' value={searchTxt} onChange={(e)=>{
                         setSearchTxt(e.target.value)
                     }}/>
-                    <button onClick={()=>{
+                    <button className="p-1 bg-gray-100 border border-black rounded-md m-2" onClick={()=>{
                         const newFilteredData = cardData.filter(card => card?.name?.toLowerCase().includes(searchTxt.toLowerCase()))
                         setFilteredData(newFilteredData)
-                    }}>search</button>
+                    }}>
+                        search
+                    </button>
                 </div>
+                <label className="m-3">UserName: </label>
+                <input className="p-1 border border-black rounded-md m-2" value={userName} onChange={(e)=>{
+                    setUserName(e.target.value)
+                    console.log("on change input ran.....");
+                    }}/>
             </div>
-            <div className="res-container">
+            <div className="flex flex-wrap">
                 {
                     filteredData.map((c, idx)=> (
-                        <Link to={`restaurant/${idx}`}><ResCard key={idx} data={c}/></Link>
+                        <Link key={idx} to={`restaurant/${idx}`}>
+                            {idx%3 === 0 ? <PromotedRestCard  key={idx} data={c} /> : <ResCard key={idx} data={c}/>}
+                        </Link>
                     ))
                 }
             </div>
